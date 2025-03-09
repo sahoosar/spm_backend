@@ -1,0 +1,48 @@
+logging:
+  level:
+    org.springframework.cloud.config: DEBUG
+    org.springframework.web.client: DEBUG
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  show-actuator: true
+
+spring:
+  security:
+    user:
+      name: "admin"
+      password: "spn"
+  application:
+    name: spm
+
+  r2dbc:
+    url: r2dbc:mysql://127.0.0.1:3306/spm_db
+    username: spm_admin
+    password: spm
+  sql:
+    init:
+      mode: always
+  r2dbc.pool:
+      enabled: true
+      max-size: 20           #  Increase max pool size to handle more connections
+      initial-size: 10        #  Keep some connections open initially
+      max-idle-time: 300000   #  Close idle connections after 5 min (default: 30s)
+      max-life-time: 1800000  # Max connection lifetime (30 min)
+      validation-query: "SELECT 1"  #  Validates if connection is alive
+
+
+webclient:
+  base-url: "https://www.alphavantage.co/query/"
+  api-key: "UFD0DCWCT23ZRCDR"
+  max-connections: 1000
+  pending-acquire-max-count: 5000
+  pending-acquire-timeout-ms: 5000
+  connect-timeout-ms: 5000
+  response-timeout-seconds: 10
+  read-timeout-seconds: 10
+  write-timeout-seconds: 10

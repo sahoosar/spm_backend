@@ -1,0 +1,25 @@
+Connect to database open the terminal use below commands
+Mysql Server version: 9.0.1 Homebrew
+
+>> brew services start mysql
+Access to MySQL :To connect run:
+>> mysql -u root
+>> mysql -u spm_admin -p
+pwd is : spm
+
+come out from mysql use below command
+>> exit
+Stop mysql server use below command
+>>  brew services stop mysql
+
+Upgrading from MySQL <8.4 to MySQL >9.0 requires running MySQL 8.4 first:
+ - brew services stop mysql
+ - brew install mysql@8.4
+ - brew services start mysql@8.4
+ - brew services stop mysql@8.4
+ - brew services start mysql
+
+ To start mysql now and restart at login:
+   brew services start mysql
+ Or, if you don't want/need a background service you can just run:
+   /opt/homebrew/opt/mysql/bin/mysqld_safe --datadir\=/opt/homebrew/var/mysql
