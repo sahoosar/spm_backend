@@ -91,3 +91,16 @@ create TABLE IF NOT EXISTS audit_logs (
     details TEXT NOT NULL,
     last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON update CURRENT_TIMESTAMP
 );
+
+
+CREATE TABLE stock_list (
+    stock_id SERIAL PRIMARY KEY,
+    user_id VARCHAR(50) NOT NULL,
+    stock_symbol VARCHAR(20) NOT NULL,
+    open_price DECIMAL(10, 2),
+    high_price DECIMAL(10, 2),
+    low_price DECIMAL(10, 2),
+    current_price DECIMAL(10, 2),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);

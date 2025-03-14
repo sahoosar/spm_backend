@@ -1,5 +1,7 @@
 package com.spm.portfolio.service;
 
+import com.spm.portfolio.dto.GlobalQuoteDTO;
+import com.spm.portfolio.dto.StockDto;
 import com.spm.portfolio.dto.StockResponseDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,7 @@ public class StockService {
         this.apiKey = apiKey;
         this.csrfService = csrfService;
     }
-    public Mono<StockResponseDTO> getRealTimeStockPrice(String symbol) {
+    public Mono<StockDto> getRealTimeStockPrice(String symbol) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .queryParam("function", "GLOBAL_QUOTE")
@@ -39,12 +41,31 @@ public class StockService {
                                         new RuntimeException("Server Error: " + response.statusCode() + " - " + errorBody)
                                 )))
                 .bodyToMono(StockResponseDTO.class)
-                .onErrorResume(WebClientResponseException.class, ex ->
-                        Mono.error(new RuntimeException("API Error: " + ex.getStatusCode() + " - " + ex.getResponseBodyAsString())))
-                .onErrorResume(Exception.class, ex ->
-                        Mono.error(new RuntimeException("Unexpected Error: " + ex.getMessage())));
-    }
+                .flatMap(stockResponseDTO -> {
+                    if (stockResponseDTO == null || stockResponseDTO.getGlobalQuote() == null) {
+                        return Mono.error(new RuntimeException("No stock data found"));
+                    }
 
+                    GlobalQuoteDTO globalQuoteDTO = stockResponseDTO.getGlobalQuote();
+
+                    StockDto stockDto = StockDto.builder()
+                            .stockSymbol(globalQuoteDTO.getStockSymbol())
+                            .highPrice(parseDoubleSafely(globalQuoteDTO.getHighPrice()))
+                            .currentPrice(parseDoubleSafely(globalQuoteDTO.getLatestPrice()))
+                            .lowPrice(parseDoubleSafely(globalQuoteDTO.getLowPrice()))
+                            .openPrice(parseDoubleSafely(globalQuoteDTO.getOpenPrice()))
+                            .build();
+
+                    return Mono.just(stockDto);
+                });
+    }
+    private Double parseDoubleSafely(String value) {
+        try {
+            return value != null && !value.trim().isEmpty() ? Double.valueOf(value) : 0.0;
+        } catch (NumberFormatException e) {
+            return 0.0; // Default fallback for invalid values
+        }
+    }
 
     public Mono<String> addStock(String symbol) {
         return csrfService.getCsrfToken().flatMap(csrfToken -> // ✅ Fetch CSRF Token first

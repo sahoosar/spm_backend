@@ -29,7 +29,7 @@ public class UserService {
 
         return databaseClient.sql(sql)
                 .bind("userId", user.getUserId())
-                .bind("userName", user.getUserName())
+                .bind("userName", user.getUsername())
                 .bind("userEmail", user.getUserEmail())
                 .bind("phoneNumber", user.getPhoneNumber())
                 .bind("password", user.getPassword())

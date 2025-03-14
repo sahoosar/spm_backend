@@ -9,7 +9,7 @@ import lombok.Setter;
 public class GlobalQuoteDTO {
 
     @JsonProperty("01. symbol")
-    private String symbol;
+    private String stockSymbol;
 
     @JsonProperty("02. open")
     private String openPrice;

@@ -91,3 +91,7 @@ CREATE TABLE audit_logs (
 CREATE DATABASE spm_db;
 USE spm_db;
 SOURCE schema.sql;  -- Import tables from SQL file
+
+
+Swagger uri
+http://localhost:8080/swagger-ui/index.html

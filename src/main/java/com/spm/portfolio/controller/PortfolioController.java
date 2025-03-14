@@ -1,11 +1,12 @@
 package com.spm.portfolio.controller;
 
 import com.spm.portfolio.model.Portfolio;
+import com.spm.portfolio.model.PortfolioSummary;
 import com.spm.portfolio.service.PortfolioService;
+import com.spm.portfolio.service.PortfolioStatusService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.server.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -16,10 +17,20 @@ import reactor.core.publisher.Mono;
 @Tag(name = "Portfolio Controller", description = "Manages user portfolio")
 public class PortfolioController {
     private final PortfolioService portfolioService;
+    private final PortfolioStatusService portfolioStatusService;
 
-    public PortfolioController(PortfolioService portfolioService) {
+
+    public PortfolioController(PortfolioService portfolioService, PortfolioStatusService portfolioStatusService) {
         this.portfolioService = portfolioService;
+        this.portfolioStatusService = portfolioStatusService;
     }
+
+    @GetMapping("/daily-summary")
+    public Mono<PortfolioSummary> getDailySummary() {
+        return portfolioStatusService.getDailySummary();
+    }
+
+
     @GetMapping
     @Operation(summary = "Get user portfolio", description = "Returns a user holdings")
     public void getPortfolio(ServerHttpRequest request)

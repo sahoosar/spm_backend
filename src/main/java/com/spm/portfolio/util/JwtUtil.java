@@ -37,8 +37,14 @@ public class JwtUtil {
                 .getBody();
         return claimsResolver.apply(claims);
     }
-
-    public boolean validateToken(String authToken) {
+    public boolean validateToken(String token) {
+        try {
+            return extractExpiration(token).after(new Date()); // Check if token is expired
+        } catch (Exception e) {
+            return false; // Return false if parsing fails
+        }
+    }
+    /*public boolean validateToken(String authToken) {
         if (authToken != null && authToken.startsWith("Bearer ")) {
             String token = authToken.substring(7);
         try {
@@ -58,7 +64,7 @@ public class JwtUtil {
 
       }
         return false;
-    }
+    }*/
 
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());

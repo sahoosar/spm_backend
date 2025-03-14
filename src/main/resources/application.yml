@@ -13,10 +13,6 @@ springdoc:
   show-actuator: true
 
 spring:
-  security:
-    user:
-      name: "admin"
-      password: "spn"
   application:
     name: spm
 
@@ -38,7 +34,7 @@ spring:
 
 webclient:
   base-url: "https://www.alphavantage.co/query/"
-  api-key: "UFD0DCWCT23ZRCDR"
+  api-key: "2T40O0A65Q30HPO7"
   max-connections: 1000
   pending-acquire-max-count: 5000
   pending-acquire-timeout-ms: 5000
