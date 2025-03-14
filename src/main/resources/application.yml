@@ -2,6 +2,8 @@ logging:
   level:
     org.springframework.cloud.config: DEBUG
     org.springframework.web.client: DEBUG
+    org.springframework.data.r2dbc: DEBUG
+    org.springframework.r2dbc: DEBUG
 
 springdoc:
   api-docs:

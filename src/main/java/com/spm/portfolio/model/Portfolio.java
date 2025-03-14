@@ -1,5 +1,6 @@
 package com.spm.portfolio.model;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -11,12 +12,13 @@ import java.time.Instant;
 @Table("portfolios")
 @Setter
 @Getter
+@Builder
 public class Portfolio {
     @Id
-    private Long id;
+    private Long portfolioId;
     private String userId;
-    private Double totalValue;
-    private String symbol;
+    private BigDecimal totalValue;
+    private String stockSymbol;
     private BigDecimal buyPrice;
     private Integer quantity;
     private BigDecimal currentPrice;

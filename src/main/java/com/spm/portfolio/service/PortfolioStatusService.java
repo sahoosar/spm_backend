@@ -23,7 +23,7 @@ public class PortfolioStatusService {
             SUM(profit_loss) AS net_profit_loss,
             COALESCE((SUM(profit_loss) / NULLIF(SUM(buy_price * quantity), 0)) * 100, 0) AS profit_percentage,
             COALESCE((ABS(SUM(profit_loss)) / NULLIF(SUM(buy_price * quantity), 0)) * 100, 0) AS loss_percentage
-        FROM portfolio
+        FROM portfolios
         WHERE transaction_date = CURDATE()
         GROUP BY transaction_date;
     """;

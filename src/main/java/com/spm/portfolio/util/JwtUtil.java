@@ -1,9 +1,8 @@
 package com.spm.portfolio.util;
+
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
 import java.security.Key;
 import java.util.Date;
 import java.util.function.Function;
@@ -31,12 +30,14 @@ public class JwtUtil {
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = Jwts.parser()
+        final Claims claims = Jwts.parserBuilder()
                 .setSigningKey(SECRET_KEY)
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
         return claimsResolver.apply(claims);
     }
+
     public boolean validateToken(String token) {
         try {
             return extractExpiration(token).after(new Date()); // Check if token is expired
@@ -44,27 +45,7 @@ public class JwtUtil {
             return false; // Return false if parsing fails
         }
     }
-    /*public boolean validateToken(String authToken) {
-        if (authToken != null && authToken.startsWith("Bearer ")) {
-            String token = authToken.substring(7);
-        try {
-            Jwts.parser()
-                    .setSigningKey(SECRET_KEY)
-                    .parseClaimsJws(token);
-            return true; // Token is valid
-        } catch (ExpiredJwtException e) {
-            System.out.println("JWT Token has expired");
-        } catch (MalformedJwtException e) {
-            System.out.println("Invalid JWT Token");
-        } catch (SignatureException e) {
-            System.out.println("Invalid JWT Signature");
-        } catch (Exception e) {
-            System.out.println("Token validation failed: " + e.getMessage());
-        }
 
-      }
-        return false;
-    }*/
 
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());

@@ -25,25 +25,10 @@ import java.util.List;
 public class SecurityConfig {
     private final CustomUserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
-
-    /*@Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-        return http
-                .csrf(csrf -> csrf
-                        .csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse()) // ✅ CSRF Token in Cookie
-                )
-                .authorizeExchange(auth -> auth
-                        .pathMatchers("/csrf", "/swagger-ui/**", "/v3/api-docs/**","/stocks").permitAll() // ✅ Allow CSRF token retrieval
-                        .anyExchange().authenticated() // Require authentication for other APIs
-                )
-                .build();
-    }*/
-
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                //.cors(ServerHttpSecurity.CorsSpec::disable)
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(List.of("http://localhost:4200")); // Allow UI URL
@@ -61,7 +46,7 @@ public class SecurityConfig {
                                 "/api-docs/**",
                                         "/auth/**", "/users/**"
                         ).permitAll()
-                        .pathMatchers("/stocks/**","/api/stocks/**")
+                        .pathMatchers("/av/stock/**","/api/stocks/**","/portfolio/**")
                                 .authenticated()
                 ).authenticationManager(reactiveAuthenticationManager())
 
@@ -70,23 +55,7 @@ public class SecurityConfig {
                 .build();
     }
 
-    /*@Bean
-    public ReactiveAuthenticationManager reactiveAuthenticationManager() {
-        return authentication -> {
-            String username = authentication.getName();
-            String password = authentication.getCredentials().toString();
 
-            return userDetailsService.findByUsername(username)
-                    .flatMap(userDetails -> {
-                        if (new BCryptPasswordEncoder().matches(password, userDetails.getPassword())) {
-                            return Mono.just(new UsernamePasswordAuthenticationToken(
-                                    userDetails, null, userDetails.getAuthorities()));
-                        } else {
-                            return Mono.empty();
-                        }
-                    });
-        };
-    }*/
     @Bean
     public ReactiveAuthenticationManager reactiveAuthenticationManager() {
         return authentication -> {

@@ -17,23 +17,24 @@ public class StockListController {
         this.stockListService = stockListService;
     }
 
-    // ✅ Fetch all stocks for a given user
-    @GetMapping("/{userId}")
-    public Flux<StockList> getStocksByUser(@PathVariable String userId) {
-        return stockListService.getStocksByUserId(userId);
-    }
-
-    // ✅ Add a new stock to the list
+    //  Add a new stock to the list.
     @PostMapping
     public Mono<ResponseEntity<StockList>> addStock(@RequestBody StockList stock) {
         return stockListService.addStock(stock)
                 .map(savedStock -> ResponseEntity.ok(savedStock));
     }
 
-    // ✅ Delete a stock from the list
+    // Delete a stock from the list.
     @DeleteMapping("/{stockSymbol}")
     public Mono<ResponseEntity<Void>> deleteStock(@PathVariable String stockSymbol) {
         return stockListService.deleteByStockSymbol(stockSymbol)
                 .then(Mono.just(ResponseEntity.noContent().build()));
     }
+
+    // Fetch all stocks for a given user.
+    @GetMapping("/users/{userId}")
+    public Flux<StockList> getStocksByUser(@PathVariable String userId) {
+        return stockListService.getStocksByUserId(userId);
+    }
+
 }

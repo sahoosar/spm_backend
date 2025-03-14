@@ -104,3 +104,15 @@ CREATE TABLE stock_list (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+
+CREATE TABLE portfolios (
+    portfolio_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id VARCHAR(50) NOT NULL,
+    total_value DECIMAL(19,4) DEFAULT NULL,
+    stock_symbol VARCHAR(50) DEFAULT NULL,
+    buy_price DECIMAL(19,4) DEFAULT NULL,
+    quantity INT DEFAULT NULL,
+    current_price DECIMAL(19,4) DEFAULT NULL,
+    profit_loss DECIMAL(19,4) DEFAULT NULL,
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id)
+) ;

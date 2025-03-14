@@ -6,9 +6,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication (scanBasePackages = {"com.spm.*"})
-@EnableScheduling
 public class SpmApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(SpmApplication.class, args);
 	}

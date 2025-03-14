@@ -19,18 +19,18 @@ public class StockListService {
         this.databaseClient = databaseClient;
     }
 
-    // ✅ Fetch all stocks for a given user
+    // Fetch all stocks for a given user
     public Flux<StockList> getStocksByUserId(String userId) {
         return stockListRepository.findByUserId(userId);
     }
 
-    // ✅ Add a stock to the list with transaction management
+    // Add a stock to the list with transaction management
     @Transactional
     public Mono<StockList> addStock(StockList stock) {
         return stockListRepository.save(stock);
     }
 
-    // ✅ Delete a stock by ID
+    // Delete a stock by ID
     @Transactional
     public Mono<Void> deleteStock(Long stockId) {
         return stockListRepository.deleteById(stockId);
