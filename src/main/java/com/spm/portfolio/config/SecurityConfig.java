@@ -44,7 +44,7 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/webjars/**",
                                 "/api-docs/**",
-                                        "/api/auth/**", "/users/**"
+                                        "/api/auth/**", "/users/**","/actuator/**"
                         ).permitAll()
                         .pathMatchers("/api/av/stock/**","/api/stocksList/**","/api/portfolio/**")
                                 .authenticated()
