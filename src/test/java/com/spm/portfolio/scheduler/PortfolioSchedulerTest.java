@@ -34,7 +34,7 @@ public class PortfolioSchedulerTest {
     public void testSchedulePortfolioUpdateWithVirtualTime() {
         // Arrange: Stub the service methods to return valid publishers.
         when(updateStockService.getAllSymbolsFromPortfolio()).thenReturn(Flux.just("AAPL", "GOOGL"));
-        when(updateStockService.updatePortfolio(anyString())).thenReturn(Mono.empty());
+        when(updateStockService.updatePortfolioCurrentPrice(anyString())).thenReturn(Mono.empty());
 
         // Set up virtual time scheduler
         VirtualTimeScheduler virtualTimeScheduler = VirtualTimeScheduler.getOrSet();
@@ -50,7 +50,7 @@ public class PortfolioSchedulerTest {
                 .atMost(Duration.ofSeconds(5))
                 .untilAsserted(() -> {
                     verify(updateStockService, atLeastOnce()).getAllSymbolsFromPortfolio();
-                    verify(updateStockService, atLeastOnce()).updatePortfolio(anyString());
+                    verify(updateStockService, atLeastOnce()).updatePortfolioCurrentPrice(anyString());
                 });
     }
 
@@ -61,10 +61,10 @@ public class PortfolioSchedulerTest {
                 .thenReturn(Flux.just("AAPL", "MSFT", "GOOGL"));
 
         // Stub updatePortfolio for "AAPL" and "GOOGL" to return Mono.empty()
-        when(updateStockService.updatePortfolio("AAPL")).thenReturn(Mono.empty());
-        when(updateStockService.updatePortfolio("GOOGL")).thenReturn(Mono.empty());
+        when(updateStockService.updatePortfolioCurrentPrice("AAPL")).thenReturn(Mono.empty());
+        when(updateStockService.updatePortfolioCurrentPrice("GOOGL")).thenReturn(Mono.empty());
         // For "MSFT", simulate an error.
-        when(updateStockService.updatePortfolio("MSFT")).thenReturn(Mono.error(new RuntimeException("Error updating MSFT")));
+        when(updateStockService.updatePortfolioCurrentPrice("MSFT")).thenReturn(Mono.error(new RuntimeException("Error updating MSFT")));
 
         // Use a VirtualTimeScheduler to simulate the passage of time.
         VirtualTimeScheduler virtualTimeScheduler = VirtualTimeScheduler.getOrSet();
@@ -81,9 +81,9 @@ public class PortfolioSchedulerTest {
                     // Verify that getAllSymbols() was called at least once.
                     verify(updateStockService, atLeastOnce()).getAllSymbolsFromPortfolio();
                     // Verify that updatePortfolio() was called for each symbol.
-                    verify(updateStockService, atLeastOnce()).updatePortfolio("AAPL");
-                    verify(updateStockService, atLeastOnce()).updatePortfolio("GOOGL");
-                    verify(updateStockService, atLeastOnce()).updatePortfolio("MSFT");
+                    verify(updateStockService, atLeastOnce()).updatePortfolioCurrentPrice("AAPL");
+                    verify(updateStockService, atLeastOnce()).updatePortfolioCurrentPrice("GOOGL");
+                    verify(updateStockService, atLeastOnce()).updatePortfolioCurrentPrice("MSFT");
                 });
     }
 
@@ -93,12 +93,12 @@ public class PortfolioSchedulerTest {
         // Arrange: Stub getAllSymbols() to return three symbols.
         when(updateStockService.getAllSymbolsFromPortfolio())
                 .thenReturn(Flux.just("AAPL", "MSFT", "GOOGL"));
-        when(updateStockService.updatePortfolio("AAPL")).thenReturn(Mono.empty());
-        when(updateStockService.updatePortfolio("GOOGL")).thenReturn(Mono.empty());
+        when(updateStockService.updatePortfolioCurrentPrice("AAPL")).thenReturn(Mono.empty());
+        when(updateStockService.updatePortfolioCurrentPrice("GOOGL")).thenReturn(Mono.empty());
 
         // For "MSFT", simulate two failures then a success.
         AtomicInteger msftCounter = new AtomicInteger(0);
-        when(updateStockService.updatePortfolio("MSFT")).thenAnswer(invocation -> {
+        when(updateStockService.updatePortfolioCurrentPrice("MSFT")).thenAnswer(invocation -> {
             int count = msftCounter.incrementAndGet();
             if (count < 3) {
                 return Mono.error(new RuntimeException("Error updating MSFT"));
@@ -120,7 +120,7 @@ public class PortfolioSchedulerTest {
         Awaitility.await()
                 .atMost(Duration.ofSeconds(5))
                 .untilAsserted(() -> {
-                    verify(updateStockService, atLeast(3)).updatePortfolio("MSFT");
+                    verify(updateStockService, atLeast(3)).updatePortfolioCurrentPrice("MSFT");
                     verify(updateStockService, atLeastOnce()).getAllSymbolsFromPortfolio();
                 });
     }

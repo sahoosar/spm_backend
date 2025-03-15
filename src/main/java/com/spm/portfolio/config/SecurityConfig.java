@@ -44,9 +44,9 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/webjars/**",
                                 "/api-docs/**",
-                                        "/auth/**", "/users/**"
+                                        "/api/auth/**", "/users/**"
                         ).permitAll()
-                        .pathMatchers("/av/stock/**","/api/stocks/**","/portfolio/**")
+                        .pathMatchers("/api/av/stock/**","/api/stocksList/**","/api/portfolio/**")
                                 .authenticated()
                 ).authenticationManager(reactiveAuthenticationManager())
 

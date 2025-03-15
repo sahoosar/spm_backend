@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/av/stock")
-@Tag(name = "Stock Controller", description = "Fetches real-time stock prices")
+@RequestMapping("/api/av/stock")
+@Tag(name = "Alpha Vantage Stock Controller", description = "Fetches real-time stock prices")
 @RequiredArgsConstructor
 public class AlphaVantageController {
 

@@ -91,7 +91,7 @@ create TABLE IF NOT EXISTS audit_logs (
     details TEXT NOT NULL,
     last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON update CURRENT_TIMESTAMP
 );
-
+--- Excuted below script
 
 CREATE TABLE stock_list (
     stock_id SERIAL PRIMARY KEY,
@@ -116,3 +116,14 @@ CREATE TABLE portfolios (
     profit_loss DECIMAL(19,4) DEFAULT NULL,
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id)
 ) ;
+
+CREATE TABLE transactions_audit (
+  transaction_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  user_id VARCHAR(255) NOT NULL,
+  stock_symbol VARCHAR(100) NOT NULL,
+  operation_type VARCHAR(50) NOT NULL,
+  quantity INT NOT NULL,
+  price DECIMAL(19,2) NOT NULL,
+  transaction_date DATETIME NOT NULL,
+  CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(user_id)
+);

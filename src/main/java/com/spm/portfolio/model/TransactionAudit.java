@@ -7,19 +7,19 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
-@Table("portfolios")
+@Table("transactions_audit")
+@Builder
 @Setter
 @Getter
-@Builder
-public class Portfolio {
+public class TransactionAudit {
     @Id
-    private Long portfolioId;
+    private Long transactionId;
     private String userId;
-    private BigDecimal totalValue;
     private String stockSymbol;
-    private BigDecimal buyPrice;
-    private Integer quantity;
-    private BigDecimal currentPrice;
-    private BigDecimal profitLoss;
+    private String operationType;
+    private int quantity;
+    private BigDecimal price;
+    private LocalDateTime transactionDate;
 }

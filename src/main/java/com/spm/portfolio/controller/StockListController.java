@@ -2,20 +2,19 @@ package com.spm.portfolio.controller;
 
 import com.spm.portfolio.model.StockList;
 import com.spm.portfolio.service.StockListService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/api/stocks")
+@RequestMapping("/api/stocksList")
+@RequiredArgsConstructor
 public class StockListController {
 
     private final StockListService stockListService;
 
-    public StockListController(StockListService stockListService) {
-        this.stockListService = stockListService;
-    }
 
     //  Add a new stock to the list.
     @PostMapping

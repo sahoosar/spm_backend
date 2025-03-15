@@ -4,6 +4,7 @@ import com.spm.portfolio.dto.LoginRequestDto;
 import com.spm.portfolio.model.User;
 import com.spm.portfolio.repository.UserRepository;
 import com.spm.portfolio.service.user.CustomUserDetailsService;
+import com.spm.portfolio.service.user.UserService;
 import com.spm.portfolio.util.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,6 @@ public class AuthControllerTest {
     private WebTestClient webTestClient;
     private CustomUserDetailsService userDetailsService;
     private JwtUtil jwtUtil;
-    private UserRepository userRepository;
     private BCryptPasswordEncoder passwordEncoder;
 
 
@@ -29,11 +29,10 @@ public class AuthControllerTest {
         // Create mocks for dependencies.
         userDetailsService = mock(CustomUserDetailsService.class);
         jwtUtil = mock(JwtUtil.class);
-        userRepository = mock(UserRepository.class);
         passwordEncoder = mock(BCryptPasswordEncoder.class);
 
         // Instantiate the AuthController with the mocked dependencies.
-        AuthController authController = new AuthController(userDetailsService, jwtUtil, userRepository, passwordEncoder);
+        AuthController authController = new AuthController(userDetailsService, jwtUtil, passwordEncoder);
 
         // Bind WebTestClient to the controller.
         webTestClient = WebTestClient.bindToController(authController)

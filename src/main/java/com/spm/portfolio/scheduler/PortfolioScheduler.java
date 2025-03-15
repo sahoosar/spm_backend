@@ -34,7 +34,7 @@ public class PortfolioScheduler {
         Flux.interval(Duration.ofSeconds(30), scheduler)
                 .flatMap(tick -> updateStockService.getAllSymbolsFromPortfolio())
                 .flatMap(symbol ->
-                        updateStockService.updatePortfolio(symbol)
+                        updateStockService.updatePortfolioCurrentPrice(symbol)
                                 // Retry up to 3 times with a 10ms delay using the provided scheduler.
                                 .retryWhen(Retry.fixedDelay(3, Duration.ofMillis(10)).scheduler(scheduler))
                                 .onErrorResume(e -> {
@@ -47,7 +47,7 @@ public class PortfolioScheduler {
         Flux.interval(Duration.ofSeconds(30), scheduler)
                 .flatMap(tick -> updateStockService.getAllSymbolsFromStockList())
                 .flatMap(symbol ->
-                        updateStockService.updateStockList(symbol)
+                        updateStockService.updateStockListCurrentPrice(symbol)
                                 // Retry up to 3 times with a 10ms delay using the provided scheduler.
                                 .retryWhen(Retry.fixedDelay(3, Duration.ofMillis(10)).scheduler(scheduler))
                                 .onErrorResume(e -> {
@@ -64,7 +64,7 @@ public class PortfolioScheduler {
         Flux.interval(interval, Duration.ofMillis(100), scheduler) // initial delay = interval; subsequent emissions every 10ms
                 .flatMap(tick -> updateStockService.getAllSymbolsFromPortfolio())
                 .flatMap(symbol ->
-                        updateStockService.updatePortfolio(symbol)
+                        updateStockService.updatePortfolioCurrentPrice(symbol)
                                 // Retry up to 3 times with a 10ms fixed delay using the provided scheduler.
                                 .retryWhen(Retry.fixedDelay(3, Duration.ofMillis(10)).scheduler(scheduler))
                                 .onErrorResume(e -> {

@@ -66,14 +66,5 @@ public class StockService {
         }
     }
 
-    public Mono<String> addStock(String symbol) {
-        return csrfService.getCsrfToken().flatMap(csrfToken -> // ✅ Fetch CSRF Token first
-                webClient.post()
-                        .uri("/stocks/add")
-                        .header("X-CSRF-TOKEN", csrfToken) // ✅ Add CSRF token in header
-                        .bodyValue("symbol:"+symbol)
-                        .retrieve()
-                        .bodyToMono(String.class)
-        );
-    }
+
 }
