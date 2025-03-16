@@ -4,11 +4,10 @@ import com.spm.portfolio.dto.HoldingsDto;
 import com.spm.portfolio.model.Portfolio;
 import com.spm.portfolio.model.PortfolioSummary;
 import com.spm.portfolio.service.UpdateStockService;
-import com.spm.portfolio.service.PortfolioStatusService;
+import com.spm.portfolio.service.PortfolioSummaryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -19,16 +18,16 @@ import reactor.core.publisher.Mono;
 @Tag(name = "Portfolio Controller", description = "Manages user portfolio")
 public class PortfolioController {
     private final UpdateStockService updateStockService;
-    private final PortfolioStatusService portfolioStatusService;
+    private final PortfolioSummaryService portfolioSummaryService;
 
-    @GetMapping("/daily-summary")
-    public Mono<PortfolioSummary> getDailySummary() {
-        return portfolioStatusService.getDailySummary();
+    @GetMapping("/daily-summary/{userId}")
+    public Mono<PortfolioSummary> getDailySummary(@PathVariable String userId) {
+        return portfolioSummaryService.getDailySummary(userId);
     }
 
     @PostMapping("/stock")
     @Operation(summary = "Adding or reducing stock from user portfolio")
-    public Mono<Portfolio> updateStockToPortfolio(@RequestBody HoldingsDto holdingsDto) {
+    public Mono<Object> updateStockToPortfolio(@RequestBody HoldingsDto holdingsDto) {
         return updateStockService.upsertStockToPortfolio(holdingsDto);
     }
 

@@ -1,7 +1,9 @@
 package com.spm.portfolio.controller;
 
 import com.spm.portfolio.dto.LoginRequestDto;
-import com.spm.portfolio.service.user.CustomUserDetailsService;
+import com.spm.portfolio.exception.InvalidCredentialsException;
+import com.spm.portfolio.exception.InvalidTokenException;
+import com.spm.portfolio.service.CustomUserDetailsService;
 import com.spm.portfolio.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -19,16 +21,22 @@ public class AuthController {
     private final JwtUtil jwtUtil;
     private final BCryptPasswordEncoder passwordEncoder;
 
-
     @GetMapping(value = "/token", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<Boolean> validateToken(@RequestHeader("Authorization") String authHeader) {
-        String jwt = "";
-        String username;
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            jwt = authHeader.substring(7);
-            username = jwtUtil.extractUsername(jwt);
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new InvalidTokenException("Missing or invalid Authorization header");
         }
-        return Mono.just(jwtUtil.validateToken(jwt));
+
+        String jwt = authHeader.substring(7);
+        String username;
+
+        try {
+            username = jwtUtil.extractUsername(jwt);
+            return Mono.just(jwtUtil.validateToken(jwt));
+        } catch (Exception ex) {
+            throw new InvalidTokenException("Invalid or expired token");
+        }
     }
 
     @PostMapping("/login")
@@ -55,7 +63,7 @@ public class AuthController {
                         response.addCookie(userIdcookie);
                         return Mono.just(jwtToken);
                     } else {
-                        return Mono.error(new RuntimeException("Invalid credentials"));
+                        return Mono.error(new InvalidCredentialsException("Invalid credentials"));
                     }
                 });
 

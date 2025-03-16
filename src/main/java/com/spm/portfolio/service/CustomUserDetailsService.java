@@ -1,4 +1,4 @@
-package com.spm.portfolio.service.user;
+package com.spm.portfolio.service;
 
 import com.spm.portfolio.repository.UserRepository;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;

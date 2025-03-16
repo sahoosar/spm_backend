@@ -3,6 +3,7 @@ package com.spm.portfolio.service;
 import com.spm.portfolio.dto.GlobalQuoteDTO;
 import com.spm.portfolio.dto.StockDto;
 import com.spm.portfolio.dto.StockResponseDTO;
+import com.spm.portfolio.exception.StockNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -13,13 +14,11 @@ public class StockService {
     private final WebClient webClient;
     private final String apiKey;
 
-    private final CsrfService csrfService; // Inject CSRF service
 
 
-    public StockService(WebClient webClient, @Value("${webclient.api-key}") String apiKey, CsrfService csrfService) {
+    public StockService(WebClient webClient, @Value("${webclient.api-key}") String apiKey) {
         this.webClient = webClient;
         this.apiKey = apiKey;
-        this.csrfService = csrfService;
     }
     public Mono<StockDto> getRealTimeStockPrice(String symbol) {
         return webClient.get()
@@ -42,7 +41,7 @@ public class StockService {
                 .bodyToMono(StockResponseDTO.class)
                 .flatMap(stockResponseDTO -> {
                     if (stockResponseDTO == null || stockResponseDTO.getGlobalQuote() == null) {
-                        return Mono.error(new RuntimeException("No stock data found"));
+                        return Mono.error(new StockNotFoundException("No stock data found"));
                     }
 
                     GlobalQuoteDTO globalQuoteDTO = stockResponseDTO.getGlobalQuote();

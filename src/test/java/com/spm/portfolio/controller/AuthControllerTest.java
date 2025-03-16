@@ -2,21 +2,19 @@ package com.spm.portfolio.controller;
 
 import com.spm.portfolio.dto.LoginRequestDto;
 import com.spm.portfolio.model.User;
-import com.spm.portfolio.repository.UserRepository;
-import com.spm.portfolio.service.user.CustomUserDetailsService;
-import com.spm.portfolio.service.user.UserService;
+import com.spm.portfolio.service.CustomUserDetailsService;
 import com.spm.portfolio.util.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.http.MediaType;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 public class AuthControllerTest {
     private WebTestClient webTestClient;
     private CustomUserDetailsService userDetailsService;
@@ -37,10 +35,9 @@ public class AuthControllerTest {
         // Bind WebTestClient to the controller.
         webTestClient = WebTestClient.bindToController(authController)
                 .configureClient()
-                .baseUrl("/auth")
+                .baseUrl("/api/auth")
                 .build();
     }
-
 
     @Test
     public void testValidateToken() {
@@ -48,10 +45,10 @@ public class AuthControllerTest {
         String token = "dummy-token";
         when(jwtUtil.validateToken(token)).thenReturn(true);
 
-        // Act & Assert: Call GET /auth/token with the token in the Authorization header.
+        // Act & Assert: Call GET /api/auth/token with the token in the Authorization header.
         webTestClient.get()
                 .uri("/token")
-                .header("Authorization", token)
+                .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Boolean.class)

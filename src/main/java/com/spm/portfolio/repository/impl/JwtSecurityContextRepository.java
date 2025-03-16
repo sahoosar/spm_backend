@@ -1,5 +1,5 @@
 
-package com.spm.portfolio.repository;
+package com.spm.portfolio.repository.impl;
 
 import com.spm.portfolio.util.JwtUtil;
 import org.springframework.http.HttpHeaders;

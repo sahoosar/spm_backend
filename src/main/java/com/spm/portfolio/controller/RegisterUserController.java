@@ -1,7 +1,7 @@
 package com.spm.portfolio.controller;
 
 import com.spm.portfolio.model.User;
-import com.spm.portfolio.service.user.UserService;
+import com.spm.portfolio.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;

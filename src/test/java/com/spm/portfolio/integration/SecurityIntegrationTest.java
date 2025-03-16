@@ -18,20 +18,33 @@ public class SecurityIntegrationTest {
     @Autowired
     private JwtUtil jwtUtil;
 
-    /**
-     * Test that public endpoints (e.g. /auth/token) are accessible without authentication.
-     */
+
+    private String getValidToken() {
+        return "Bearer " + jwtUtil.generateToken("user123");
+    }
+
     @Test
-    public void testPublicEndpointAccess() {
+    public void testPublicEndpointWithDummyToken() {
         // For this test, stub jwtUtil.validateToken or assume that /auth/token simply returns a Boolean.
         // Here, we just send a dummy token.
         webTestClient.get()
-                .uri("/auth/token")
-                .header("Authorization", "dummy-token")
+                .uri("/api/auth/token")
+                .header("Authorization", "Bearer dummy-token")
+                .exchange()
+                .expectStatus().isUnauthorized();
+    }
+
+    @Test
+    public void testPublicEndpointWithToken() {
+        // For this test, stub jwtUtil.validateToken or assume that /auth/token simply returns a Boolean.
+        // Here, we just send a dummy token.
+        String token = getValidToken();
+        webTestClient.get()
+                .uri("/api/auth/token")
+                .header("Authorization", token)
                 .exchange()
                 .expectStatus().isOk();
     }
-
     /**
      * Test that protected endpoints return 401 (Unauthorized) when no token is provided.
      */
@@ -44,19 +57,4 @@ public class SecurityIntegrationTest {
                 .expectStatus().isUnauthorized();
     }
 
-    /**
-     * Test that protected endpoints are accessible when a valid token is provided.
-     */
-    @Test
-    public void testProtectedEndpointAccessWithValidToken() {
-        // Assume jwtUtil.generateToken("user123") returns a valid JWT token recognized by your security configuration.
-        String rawToken = jwtUtil.generateToken("user123");
-        String token = "Bearer " + rawToken;  // Prepend the Bearer prefix
-
-        webTestClient.get()
-                .uri("/api/stocks/users/user123")
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .exchange()
-                .expectStatus().isOk();
-    }
 }

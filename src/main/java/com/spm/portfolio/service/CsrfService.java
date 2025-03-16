@@ -17,7 +17,7 @@ public class CsrfService {
         private final Mono<String> cachedCsrfToken;
 
         public CsrfService() {
-            this.cachedCsrfToken = generateCsrfToken().cache(Duration.ofMinutes(10)); // ✅ Cache token for 10 minutes
+            this.cachedCsrfToken = generateCsrfToken().cache(Duration.ofMinutes(10)); // Cache token for 10 minutes
         }
 
         private Mono<String> generateCsrfToken() {

@@ -1,7 +1,7 @@
 package com.spm.portfolio.config;
 
-import com.spm.portfolio.repository.JwtSecurityContextRepository;
-import com.spm.portfolio.service.user.CustomUserDetailsService;
+import com.spm.portfolio.repository.impl.JwtSecurityContextRepository;
+import com.spm.portfolio.service.CustomUserDetailsService;
 import com.spm.portfolio.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("http://localhost:4200")); // Allow UI URL
+                    config.setAllowedOrigins(List.of("http://localhost:4200","http://192.168.0.121:4200")); // Allow UI URL
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
                     config.setAllowCredentials(true);
@@ -44,7 +44,7 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/webjars/**",
                                 "/api-docs/**",
-                                        "/api/auth/**", "/users/**","/actuator/**"
+                                        "/api/auth/**", "/api/user/**","/actuator/**"
                         ).permitAll()
                         .pathMatchers("/api/av/stock/**","/api/stocksList/**","/api/portfolio/**")
                                 .authenticated()

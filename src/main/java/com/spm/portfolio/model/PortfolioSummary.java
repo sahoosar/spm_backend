@@ -1,18 +1,18 @@
 package com.spm.portfolio.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import java.math.BigDecimal;
 
 @AllArgsConstructor
-@Setter
+@Builder
 @Getter
 public class PortfolioSummary {
+
     private String transactionDate;
-    private Double totalInvested;
-    private Double totalProfit;
-    private Double totalLoss;
-    private Double netProfitLoss;
-    private Double profitPercentage;
-    private Double lossPercentage;
+    private BigDecimal totalInvested;
+    private BigDecimal totalProfitLoss;
+    private BigDecimal profitLossPercentage;
+    private BigDecimal portfolioEvaluation;
+
 }
